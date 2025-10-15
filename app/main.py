@@ -1,11 +1,30 @@
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI, HTTPException
+from sqlalchemy.orm import Session
 
-from . import models
-from .database import engine
+from . import crud, models, schemas
+from .database import SessionLocal, engine
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+
+# Dependency
+def get_db():
+    db = SessionLocal()#creates a new database session per request
+    try:
+        yield db #provides db session to path operation functions/endpoint func 
+    finally:
+        db.close()
+
+
+@app.post("/users/", response_model=schemas.User)#response model is the schema that defines what the response should look like--schemas.User
+def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+    db_user = crud.get_user_by_email(db, email=user.email)
+    if db_user:
+        raise HTTPException(status_code=400, detail="Email already registered")
+    return crud.create_user(db=db, user=user)
+
 
 @app.get("/")
 def read_root():
