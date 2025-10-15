@@ -1,0 +1,14 @@
+version: '3.8'
+
+services: #defines the different parts of the application
+  db:
+    image: postgres:15-alpine #tells docker to use the postgres image from docker hub
+    restart: always
+    environment:
+      - POSTGRES_USER=coach_user
+      - POSTGRES_PASSWORD=changeme
+      - POSTGRES_DB=mindset_coach_db
+    volumes: #important for persistence. It links a folder on your computer to the folder inside the Docker
+      - ./.postgres_data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
