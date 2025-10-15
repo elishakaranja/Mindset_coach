@@ -1,0 +1,7 @@
+# Docker
+.postgres_data/
+
+# Python
+.venv/
+__pycache__/
+*.pyc

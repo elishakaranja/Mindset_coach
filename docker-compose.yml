@@ -1,4 +1,4 @@
-version: '3.8'
+
 
 services: #defines the different parts of the application
   db:
@@ -11,4 +11,4 @@ services: #defines the different parts of the application
     volumes: #important for persistence. It links a folder on your computer to the folder inside the Docker
       - ./.postgres_data:/var/lib/postgresql/data
     ports:
-      - '5432:5432'
+      - '5433:5432'

@@ -53,7 +53,9 @@ This is the main goal for our initial timeframe. By the end of this phase, we wi
 - [ ] **Project Setup:**
     - [x] Scaffold the initial FastAPI project structure.
     - [x] Set up a local PostgreSQL database using Docker.
-    - [ ] Integrate SQLAlchemy and create initial database models (Users, Conversations).
+    - [x] Install SQLAlchemy and database driver.
+    - [x] Configure SQLAlchemy connection (`app/database.py`).
+    - [x] Create initial User model (`app/models.py`).
 - [ ] **Core API Endpoints:**
     - [ ] `/users`: Endpoints for user registration and login (authentication).
     - [ ] `/chat`: The main endpoint to handle conversational turns with the AI coach.
