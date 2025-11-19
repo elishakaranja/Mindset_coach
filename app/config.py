@@ -1,4 +1,4 @@
-from pydantic_settings import BaseSettings
+from pydantic import BaseSettings
 
 class Settings(BaseSettings):
     # NOTE: This is a default secret key. In a real application, this

@@ -7,10 +7,11 @@ name = "pypi"
 fastapi = "*"
 uvicorn = "*"
 sqlalchemy = "*"
-psycopg2-binary = "<2.9"
-passlib = {extras = ["bcrypt"], version = "*"}
-python-jose = {extras = ["cryptography"], version = "*"}
-pydantic-settings = "*"
+psycopg2-binary = "*"
+passlib = { extras = ["bcrypt"], version = "*" }
+python-jose = { extras = ["cryptography"], version = "*" }
+pydantic = "<2.0"
+python-multipart = "*"
 
 [dev-packages]
 

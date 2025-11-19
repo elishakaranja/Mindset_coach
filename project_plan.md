@@ -50,14 +50,14 @@ To maintain a clean and organized development process:
 ### **MVP 1: The Core Coaching Experience (Weeks 1-4)**
 This is the main goal for our initial timeframe. By the end of this phase, we will have a usable application with the core features.
 
-- [ ] **Project Setup:**
+- [x] **Project Setup:**
     - [x] Scaffold the initial FastAPI project structure.
     - [x] Set up a local PostgreSQL database using Docker.
     - [x] Install SQLAlchemy and database driver.
     - [x] Configure SQLAlchemy connection (`app/database.py`).
     - [x] Create initial User model (`app/models.py`).
 - [ ] **Core API Endpoints:**
-    - [ ] `/users`: Endpoints for user registration and login (authentication).
+    - [x] `/users` & `/token`: Endpoints for user registration and login (authentication).
     - [ ] `/chat`: The main endpoint to handle conversational turns with the AI coach.
     - [ ] `/personalities`: An endpoint to list and choose a coach personality.
 - [ ] **AI & Personality:**
@@ -89,8 +89,6 @@ These are features we can work on after the core MVP is complete and stable.
 ---
 
 ## ✅ Next Steps
-1. ✅ **Finalize Plan:** We have reviewed and updated the project plan.
-2. 🧱 **Scaffold Project:** Set up the FastAPI project structure.
-3. 🐳 **Database Setup:** Get PostgreSQL running in Docker.
-4. ✍️ **Initial Models:** Define the first database models with SQLAlchemy.
-5. 🔌 **Connect AI:** Integrate the core AI service.
+1. 🧱 **Implement Chat:** Build the core chat functionality, including a protected endpoint, database models, and schemas.
+2. 🔌 **Integrate AI:** Connect the chat endpoint to the Generative AI model.
+3. ✨ **Add Personalities:** Implement the personality selection feature.
