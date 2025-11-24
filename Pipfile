@@ -12,6 +12,8 @@ passlib = { extras = ["bcrypt"], version = "*" }
 python-jose = { extras = ["cryptography"], version = "*" }
 pydantic = "<2.0"
 python-multipart = "*"
+google-generativeai = "*"
+python-dotenv = "*"
 
 [dev-packages]
 

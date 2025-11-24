@@ -1,8 +1,11 @@
 from datetime import datetime, timedelta
 from typing import Optional
 
-from jose import jwt
+from jose import jwt, JWTError
 from passlib.context import CryptContext
+from fastapi import Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
+from sqlalchemy.orm import Session
 
 from .config import settings
 
@@ -21,6 +24,10 @@ pwd_context = CryptContext(
     schemes=["pbkdf2_sha256"],
     default="pbkdf2_sha256",
 )
+
+# OAuth2PasswordBearer: This tells FastAPI where to look for the token
+# tokenUrl="token" means the client should POST to /token to get a token
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 def verify_password(plain_password, hashed_password):
@@ -44,3 +51,52 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
         to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM
     )
     return encoded_jwt
+
+
+
+
+def get_current_user(token: str = Depends(oauth2_scheme)):
+    """
+    Dependency function to get the current authenticated user from a JWT token.
+    
+    This function:
+    1. Extracts the token from the Authorization header (handled by oauth2_scheme)
+    2. Decodes the JWT to get the user's email
+    3. Queries the database to get the full User object
+    4. Raises an HTTPException if anything fails
+    
+    Usage in endpoints:
+        @app.post("/protected")
+        def protected_route(current_user: User = Depends(get_current_user)):
+            # current_user is now the authenticated User object
+            return {"user_id": current_user.id}
+    """
+    from . import models, crud
+    from .database import SessionLocal
+    
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    
+    try:
+        # Decode the JWT token
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        email: str = payload.get("sub")  # "sub" is the subject (user identifier)
+        if email is None:
+            raise credentials_exception
+    except JWTError:
+        raise credentials_exception
+    
+    # Get a database session
+    db = SessionLocal()
+    try:
+        # Query the database for the user
+        user = crud.get_user_by_email(db, email=email)
+        if user is None:
+            raise credentials_exception
+        return user
+    finally:
+        db.close()
+

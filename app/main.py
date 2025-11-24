@@ -7,10 +7,16 @@ from . import crud, models, schemas, security
 from sqlalchemy.exc import IntegrityError
 from .config import settings
 from .database import SessionLocal, engine
+from .routers import chat, personalities  # Import the chat and personalities routers
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+# Include routers
+# This makes all routes in the routers available under their prefixes
+app.include_router(chat.router)
+app.include_router(personalities.router)
 
 
 # Dependency
