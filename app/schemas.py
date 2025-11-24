@@ -15,7 +15,6 @@ class UserCreate(UserBase):  # what comes in: email + password
 class User(UserBase):  # what goes out: email + id + is_active
     id: int
     is_active: bool
-    selected_personality: str  # which coach personality the user has selected
 
     class Config:
         orm_mode = True  # allow reading data from ORM objects (e.g., SQLAlchemy models)
@@ -63,33 +62,15 @@ class ChatResponse(BaseModel):
     created_at: datetime
 
 
-# ===== PERSONALITY SCHEMAS =====
-class PersonalityInfo(BaseModel):
-    """
-    Schema for personality information.
-    """
-    id: str  # e.g., "sophia", "marcus"
-    name: str  # e.g., "Sophia"
-    tagline: str  # Short description
-    description: str  # Longer description
-
-
-class PersonalityUpdate(BaseModel):
-    """
-    Schema for updating user's selected personality.
-    """
-    personality: str  # e.g., "sophia" or "marcus"
-
-
 # ===== CONVERSATION SCHEMAS =====
 class ConversationSummary(BaseModel):
     """
-    Schema for conversation summary (without messages).
+    Schema for conversation list summaries.
     """
     id: int
     created_at: datetime
-    updated_at: Optional[datetime]
-    message_count: int  # Number of messages in this conversation
+    updated_at: datetime
+    message_count: int
 
     class Config:
         orm_mode = True
@@ -97,12 +78,12 @@ class ConversationSummary(BaseModel):
 
 class ConversationDetail(BaseModel):
     """
-    Schema for conversation with full message history.
+    Schema for detailed conversation view with all messages.
     """
     id: int
     created_at: datetime
-    updated_at: Optional[datetime]
-    messages: List[MessageResponse]  # All messages in the conversation
+    updated_at: datetime
+    messages: List[MessageResponse]
 
     class Config:
         orm_mode = True
