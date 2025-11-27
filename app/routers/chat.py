@@ -176,3 +176,21 @@ def get_conversation(
         messages=[schemas.MessageResponse.from_orm(msg) for msg in messages]
     )
 
+
+@router.get("/personalities")
+def list_personalities(current_user: models.User = Depends(security.get_current_user)):
+    """
+    Get the list of available AI coach personalities.
+    
+    Returns details about each personality including name, tagline, and description.
+    """
+    from ..personalities import PERSONALITIES
+    
+    return [
+        {
+            "name": name,
+            "tagline": info["tagline"],
+            "description": info["description"]
+        }
+        for name, info in PERSONALITIES.items()
+    ]

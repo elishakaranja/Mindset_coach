@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Your Coach - Mindset Coach</title>
+
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/components.css">
+    <link rel="stylesheet" href="styles/animations.css">
+</head>
+
+<body class="animated-gradient-bg">
+
+    <nav class="nav">
+        <div class="container">
+            <div class="nav-content">
+                <div class="nav-brand">
+                    <span class="brand-icon">🧠</span>
+                    <span class="brand-name">Mindset Coach</span>
+                </div>
+                <div class="nav-links">
+                    <a href="index.html" class="nav-link">← Back</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section class="personalities-section">
+        <div class="container">
+            <div class="section-header">
+                <h1 class="section-title">Choose Your Coach</h1>
+                <p class="section-subtitle">Each coach has a unique personality and approach. Pick the one that
+                    resonates with you.</p>
+            </div>
+
+            <div class="personalities-grid">
+                <!-- Sophia -->
+                <div class="personality-card-large card card-interactive scroll-reveal">
+                    <div class="personality-header">
+                        <div class="personality-icon-large">💫</div>
+                        <div class="personality-meta">
+                            <h2 class="personality-name">Sophia</h2>
+                            <p class="personality-tagline">Warm, intuitive, but won't let you off easy</p>
+                        </div>
+                    </div>
+
+                    <p class="personality-description">
+                        Sophia feels like that friend who really gets you but also calls you out on your BS.
+                        She's empathetic and warm, but she'll push you when you're making excuses.
+                        Sometimes she asks questions that make you uncomfortable - and that's the point.
+                    </p>
+
+                    <div class="personality-traits">
+                        <span class="badge badge-primary">Empathetic</span>
+                        <span class="badge badge-primary">Insightful</span>
+                        <span class="badge badge-primary">Warm</span>
+                        <span class="badge badge-primary">Challenging</span>
+                    </div>
+
+                    <div class="personality-example">
+                        <h4>Her Style:</h4>
+                        <div class="example-message">
+                            "okay so you're overwhelmed - but real talk, what are you avoiding by staying busy?"
+                        </div>
+                        <div class="example-message">
+                            "wait, you just said something important. do you hear yourself? you literally just described
+                            the pattern."
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary btn-lg" onclick="selectCoach('sophia')">
+                        Start with Sophia
+                        <span>→</span>
+                    </button>
+                </div>
+
+                <!-- Marcus -->
+                <div class="personality-card-large card card-interactive scroll-reveal">
+                    <div class="personality-header">
+                        <div class="personality-icon-large">⚡</div>
+                        <div class="personality-meta">
+                            <h2 class="personality-name">Marcus</h2>
+                            <p class="personality-tagline">Stoic, direct, no-nonsense truth-teller</p>
+                        </div>
+                    </div>
+
+                    <p class="personality-description">
+                        Marcus is that coach who doesn't sugarcoat anything. He's inspired by stoic philosophy -
+                        focused on what you can control, action over feelings. He can be blunt, sometimes harsh,
+                        but he's never mean. He just believes in you too much to let you make excuses.
+                    </p>
+
+                    <div class="personality-traits">
+                        <span class="badge badge-primary">Direct</span>
+                        <span class="badge badge-primary">Action-Oriented</span>
+                        <span class="badge badge-primary">Stoic</span>
+                        <span class="badge badge-primary">Disciplined</span>
+                    </div>
+
+                    <div class="personality-example">
+                        <h4>His Style:</h4>
+                        <div class="example-message">
+                            "Struggling with what exactly? Be specific."
+                        </div>
+                        <div class="example-message">
+                            "You're anxious. Noted. What's the next action you're taking?"
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary btn-lg" onclick="selectCoach('marcus')">
+                        Start with Marcus
+                        <span>→</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="comparison-section">
+                <h3>Not Sure Which One?</h3>
+                <p>Take our quick 3-question quiz to find your perfect match</p>
+                <a href="onboarding.html" class="btn btn-outline btn-lg">Take the Quiz</a>
+            </div>
+        </div>
+    </section>
+
+    <script type="module" src="scripts/animations/BackgroundEffects.js"></script>
+    <script src="scripts/app.js"></script>
+    <script src="scripts/components/PersonalitySelector.js"></script>
+
+    <style>
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 14, 39, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(184, 193, 236, 0.1);
+            z-index: var(--z-fixed);
+            padding: var(--spacing-4) 0;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-2);
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-bold);
+        }
+
+        .brand-icon {
+            font-size: var(--font-size-2xl);
+        }
+
+        .nav-link {
+            color: var(--color-text-secondary);
+            font-weight: var(--font-weight-medium);
+        }
+
+        .personalities-section {
+            padding: calc(var(--header-height) + var(--spacing-12)) 0 var(--spacing-20);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: var(--spacing-16);
+        }
+
+        .section-title {
+            font-size: var(--font-size-5xl);
+            margin-bottom: var(--spacing-4);
+        }
+
+        .section-subtitle {
+            font-size: var(--font-size-xl);
+            color: var(--color-text-secondary);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .personalities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: var(--spacing-12);
+            margin-bottom: var(--spacing-16);
+        }
+
+        .personality-card-large {
+            padding: var(--spacing-10);
+            transition: all var(--transition-normal);
+        }
+
+        .personality-card-large:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-2xl);
+        }
+
+        .personality-header {
+            display: flex;
+            gap: var(--spacing-6);
+            margin-bottom: var(--spacing-6);
+            align-items: center;
+        }
+
+        .personality-icon-large {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--gradient-accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-5xl);
+            box-shadow: var(--shadow-glow-primary);
+            flex-shrink: 0;
+        }
+
+        .personality-meta {
+            flex: 1;
+        }
+
+        .personality-name {
+            font-size: var(--font-size-3xl);
+            margin-bottom: var(--spacing-2);
+        }
+
+        .personality-tagline {
+            font-size: var(--font-size-base);
+            color: var(--color-accent-primary);
+            font-weight: var(--font-weight-medium);
+        }
+
+        .personality-description {
+            color: var(--color-text-secondary);
+            line-height: var(--line-height-relaxed);
+            margin-bottom: var(--spacing-6);
+        }
+
+        .personality-traits {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-2);
+            margin-bottom: var(--spacing-6);
+        }
+
+        .personality-example {
+            background: var(--color-background-elevated);
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-6);
+            margin-bottom: var(--spacing-8);
+        }
+
+        .personality-example h4 {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: var(--spacing-4);
+        }
+
+        .example-message {
+            background: var(--glass-background);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-4);
+            margin-bottom: var(--spacing-3);
+            font-style: italic;
+            color: var(--color-text-primary);
+        }
+
+        .example-message:last-child {
+            margin-bottom: 0;
+        }
+
+        .comparison-section {
+            text-align: center;
+            padding: var(--spacing-12);
+            background: var(--glass-background);
+            border-radius: var(--border-radius-2xl);
+            border: 1px solid var(--glass-border);
+        }
+
+        .comparison-section h3 {
+            font-size: var(--font-size-3xl);
+            margin-bottom: var(--spacing-3);
+        }
+
+        .comparison-section p {
+            color: var(--color-text-secondary);
+            margin-bottom: var(--spacing-6);
+        }
+
+        @media (max-width: 950px) {
+            .personalities-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</body>
+
+</html>

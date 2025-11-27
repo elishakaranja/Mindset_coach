@@ -59,9 +59,9 @@ def generate_response(
     system_prompt = personality["system_prompt"]
     
     # Initialize Gemini model
-    # Using gemini-1.5-flash for free tier with 1M token context
+    # Using gemini-2.5-flash for free tier with long context
     model = genai.GenerativeModel(
-        model_name="gemini-1.5-flash",
+        model_name="gemini-2.5-flash",
         system_instruction=system_prompt
     )
     
@@ -99,7 +99,7 @@ def generate_response_streaming(
     
     # Initialize Gemini model
     model = genai.GenerativeModel(
-        model_name="gemini-1.5-flash",
+        model_name="gemini-2.5-flash",
         system_instruction=system_prompt
     )
     
