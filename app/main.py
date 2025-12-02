@@ -1,21 +1,31 @@
 from datetime import timedelta
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
 from . import crud, models, schemas, security
 from sqlalchemy.exc import IntegrityError
 from .config import settings
 from .database import SessionLocal, engine
-from .routers import chat  # Import the chat router
+from .routers import chat, personalities  # Import routers
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-# Include the chat router
-# This makes all routes in the chat router available under /chat
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:8080", "http://127.0.0.1:8080"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Include routers
 app.include_router(chat.router)
+app.include_router(personalities.router)
 
 
 # Dependency

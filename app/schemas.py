@@ -8,8 +8,9 @@ class UserBase(BaseModel):
     email: str
 
 
-class UserCreate(UserBase):  # what comes in: email + password
+class UserCreate(UserBase):  # what comes in: email + password + username
     password: str
+    username: Optional[str] = None
 
 
 class User(UserBase):  # what goes out: email + id + is_active
@@ -27,10 +28,12 @@ class ChatRequest(BaseModel):
     
     Fields:
     - message: The user's message text
+    - personality_id: Optional personality to use for this message
     - conversation_id: Optional. If provided, continues an existing conversation.
                        If None, creates a new conversation.
     """
     message: str
+    personality_id: Optional[str] = None
     conversation_id: Optional[int] = None  # None = new conversation, int = continue existing
 
 
@@ -87,3 +90,22 @@ class ConversationDetail(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+# ===== PERSONALITY SCHEMAS =====
+class PersonalityInfo(BaseModel):
+    """
+    Schema for personality information (public-facing).
+    Does not include system prompts.
+    """
+    id: str
+    name: str
+    tagline: str
+    description: str
+
+
+class PersonalityUpdate(BaseModel):
+    """
+    Schema for updating user's selected personality.
+    """
+    personality: str

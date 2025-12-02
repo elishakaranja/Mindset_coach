@@ -22,7 +22,7 @@ def get_db():
         db.close()
 
 
-@router.post("/", response_model=schemas.ChatResponse)
+@router.post("/", response_model=dict)
 def send_message(
     request: schemas.ChatRequest,
     current_user: models.User = Depends(security.get_current_user),
@@ -37,12 +37,15 @@ def send_message(
        - If no: Create a new conversation
     2. Save the user's message to the database
     3. Retrieve conversation history
-    4. Generate AI response using Gemini with user's selected personality
+    4. Generate AI response using Gemini with selected personality
     5. Save the AI's response to the database
     6. Return the response
     
     Authentication: Requires valid JWT token in Authorization header
     """
+    
+    # Determine which personality to use
+    personality_name = request.personality_id or current_user.selected_personality or "sophia"
     
     # Step 1: Get or create conversation
     if request.conversation_id:
@@ -84,7 +87,7 @@ def send_message(
         ai_response_text = ai_service.generate_response(
             user_message=request.message,
             conversation_history=conversation_history,
-            personality_name=current_user.selected_personality
+            personality_name=personality_name
         )
     except Exception as e:
         # If AI generation fails, provide a helpful error
@@ -103,12 +106,12 @@ def send_message(
     db.commit()
     db.refresh(ai_message)  # Refresh to get created_at timestamp
     
-    # Step 6: Return the response
-    return schemas.ChatResponse(
-        conversation_id=conversation.id,
-        message=ai_response_text,
-        created_at=ai_message.created_at
-    )
+    # Step 6: Return the response in frontend-expected format
+    return {
+        "conversation_id": conversation.id,
+        "response": ai_response_text,
+        "created_at": ai_message.created_at.isoformat()
+    }
 
 
 @router.get("/conversations", response_model=List[schemas.ConversationSummary])
@@ -177,20 +180,19 @@ def get_conversation(
     )
 
 
-@router.get("/personalities")
-def list_personalities(current_user: models.User = Depends(security.get_current_user)):
+@router.get("/history", response_model=List[schemas.MessageResponse])
+def get_chat_history(
+    current_user: models.User = Depends(security.get_current_user),
+    db: Session = Depends(get_db)
+):
     """
-    Get the list of available AI coach personalities.
+    Get chat history for the current user (all messages from all conversations).
     
-    Returns details about each personality including name, tagline, and description.
+    Returns messages in chronological order.
     """
-    from ..personalities import PERSONALITIES
+    messages = db.query(models.Message).join(models.Conversation).filter(
+        models.Conversation.user_id == current_user.id
+    ).order_by(models.Message.created_at).all()
     
-    return [
-        {
-            "name": name,
-            "tagline": info["tagline"],
-            "description": info["description"]
-        }
-        for name, info in PERSONALITIES.items()
-    ]
+    return [schemas.MessageResponse.from_orm(msg) for msg in messages]
+
