@@ -22,7 +22,7 @@ def get_db():
         db.close()
 
 
-@router.post("/", response_model=dict)
+@router.post("", response_model=dict)
 def send_message(
     request: schemas.ChatRequest,
     current_user: models.User = Depends(security.get_current_user),

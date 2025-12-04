@@ -1,0 +1,63 @@
+services:
+  # Database - PostgreSQL
+  # Why: Stores all user data, conversations, messages
+  - type: pserv
+    name: mindset-coach-db
+    plan: free
+    # Render auto-generates DATABASE_URL and makes it available to other services
+    
+  # Backend API - FastAPI
+  # Why: Handles authentication, chat logic, AI integration
+  - type: web
+    name: mindset-coach-api
+    runtime: python
+    plan: free
+    # Connect to your GitHub repo
+    buildCommand: pip install -r requirements.txt
+    # Start command - $PORT is provided by Render
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      # Database connection - automatically linked from mindset-coach-db
+      - key: DATABASE_URL
+        fromDatabase:
+          name: mindset-coach-db
+          property: connectionString
+      # Your Gemini API key - you'll add this manually in Render dashboard
+      - key: GEMINI_API_KEY
+        sync: false  # Don't sync from Git, set manually
+      # Secret key for JWT tokens - generate a new one for production
+      - key: SECRET_KEY
+        generateValue: true  # Render auto-generates a secure random value
+      # Algorithm for JWT
+      - key: ALGORITHM
+        value: HS256
+      # Token expiration time (in minutes)
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: "10080"  # 7 days
+    # Health check - Render pings this to know if service is running
+    healthCheckPath: /
+    
+  # Frontend - React Static Site
+  # Why: Serves the user interface
+  - type: static
+    name: mindset-coach
+    # Build the React app
+    buildCommand: cd frontend-react && npm install && npm run build
+    # Where the built files are
+    staticPublishPath: frontend-react/dist
+    envVars:
+      # Tell React where the API is
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: mindset-coach
+          # This creates: https://mindset-coach-api.onrender.com
+          envVarKey: RENDER_EXTERNAL_URL
+    # Custom headers for security
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff

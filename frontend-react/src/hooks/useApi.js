@@ -1,6 +1,9 @@
 import { useAuth } from '../context/AuthContext';
 
-const API_BASE_URL = '';
+// API Base URL - uses environment variable for production
+// Why: Development = localhost:8000, Production = Render API URL
+// Vite exposes env vars as import.meta.env.VITE_*
+const API_BASE_URL = import.meta.env.VITE_API_URL || '';
 
 // API Helper
 async function apiRequest(endpoint, options = {}, token = null) {
@@ -12,15 +15,23 @@ async function apiRequest(endpoint, options = {}, token = null) {
 
     if (token) {
         headers['Authorization'] = `Bearer ${token}`;
+        console.log('🔑 Token being sent:', token.substring(0, 20) + '...');
+    } else {
+        console.warn('⚠️ No token provided to API request');
     }
+
+    console.log(`📤 API Request: ${options.method || 'GET'} ${url}`);
 
     const response = await fetch(url, {
         ...options,
         headers
     });
 
+    console.log(`📥 API Response: ${response.status} ${response.statusText}`);
+
     if (!response.ok) {
         if (response.status === 401) {
+            console.error('❌ 401 Unauthorized - Token might be invalid or expired');
             // Handle unauthorized in components
             throw new Error('UNAUTHORIZED');
         }
@@ -71,9 +82,10 @@ export const useLogin = () => {
 
 // Hook for sending messages
 export const useSendMessage = () => {
-    const { token } = useAuth();
-
     const sendMessage = async (message, personalityId) => {
+        // Get fresh token from localStorage on each call
+        const token = localStorage.getItem('token');
+        console.log('💬 Sending message, token exists:', !!token);
         return await apiRequest('/chat', {
             method: 'POST',
             body: JSON.stringify({
@@ -88,9 +100,9 @@ export const useSendMessage = () => {
 
 // Hook for getting chat history
 export const useGetChatHistory = () => {
-    const { token } = useAuth();
-
     const getChatHistory = async () => {
+        // Get fresh token from localStorage on each call
+        const token = localStorage.getItem('token');
         return await apiRequest('/chat/history', {}, token);
     };
 
@@ -99,11 +111,12 @@ export const useGetChatHistory = () => {
 
 // Hook for getting personalities
 export const useGetPersonalities = () => {
-    const { token } = useAuth();
-
     const getPersonalities = async () => {
+        // Get fresh token from localStorage on each call
+        const token = localStorage.getItem('token');
         return await apiRequest('/personalities', {}, token);
     };
 
     return { getPersonalities };
 };
+

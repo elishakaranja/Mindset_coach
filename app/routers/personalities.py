@@ -19,7 +19,7 @@ def get_db():
         db.close()
 
 
-@router.get("/", response_model=List[schemas.PersonalityInfo])
+@router.get("", response_model=List[schemas.PersonalityInfo])
 def get_personalities():
     """
     List all available coach personalities.

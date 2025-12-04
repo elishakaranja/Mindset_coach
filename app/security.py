@@ -74,6 +74,8 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
     from . import models, crud
     from .database import SessionLocal
     
+    print(f"🔐 Token received: {token[:20] if token else 'None'}...")
+    
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -84,9 +86,12 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
         # Decode the JWT token
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
         email: str = payload.get("sub")  # "sub" is the subject (user identifier)
+        print(f"✅ Token decoded successfully, email: {email}")
         if email is None:
+            print("❌ No email in token payload")
             raise credentials_exception
-    except JWTError:
+    except JWTError as e:
+        print(f"❌ JWT decode error: {e}")
         raise credentials_exception
     
     # Get a database session
@@ -95,7 +100,9 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
         # Query the database for the user
         user = crud.get_user_by_email(db, email=email)
         if user is None:
+            print(f"❌ User not found for email: {email}")
             raise credentials_exception
+        print(f"✅ User authenticated: {user.email}")
         return user
     finally:
         db.close()
