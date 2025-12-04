@@ -3,11 +3,13 @@ import { useAuth } from '../context/AuthContext';
 // API Base URL - uses environment variable for production
 // Why: Development = localhost:8000, Production = Render API URL
 // Vite exposes env vars as import.meta.env.VITE_*
-const API_BASE_URL = import.meta.env.VITE_API_URL || '';
+// Remove trailing slash to prevent double slash in URLs (e.g., //users)
+const API_BASE_URL = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
 
 // API Helper
 async function apiRequest(endpoint, options = {}, token = null) {
     const url = `${API_BASE_URL}${endpoint}`;
+
     const headers = {
         'Content-Type': 'application/json',
         ...options.headers
