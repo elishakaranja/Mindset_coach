@@ -50,7 +50,7 @@ services:
       - key: VITE_API_URL
         fromService:
           type: web
-          name: mindset-coach
+          name: mindset-coach-api  # Must match backend service name (line 16)
           # This creates: https://mindset-coach-api.onrender.com
           envVarKey: RENDER_EXTERNAL_URL
     # Custom headers for security
